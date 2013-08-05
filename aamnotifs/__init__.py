@@ -28,7 +28,7 @@ class Notifs(object):
         try:
             self.connection = pika.BlockingConnection(pika.URLParameters(self.url))
             self.channel = self.connection.channel()
-            self.channel.exchange_declare(exchange=self.exchange, type='fanout')
+            self.channel.exchange_declare(exchange=self.exchange, type='direct')
         except:
             time.sleep(2)
             self.connect(url)
