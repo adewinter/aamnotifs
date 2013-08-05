@@ -12,18 +12,23 @@ import pika
 import time
 import json
 
+import logging
+logging.getLogger('pika').setLevel(logging.DEBUG)
+
 
 class Notifs(object):
 
-    def __init__(self, url, exchange="notifs"):
+    def __init__(self, url, exchange="aamnotifs"):
         self.exchange = exchange
-        self.connect(url)
+        self.url = url
+        self.connect()
 
-    def connect(self, url):
+    def connect(self):
+        print 'Trying to connect %s' % self.url
         try:
-            self.connection = pika.BlockingConnection(pika.URLParameters(url))
+            self.connection = pika.BlockingConnection(pika.URLParameters(self.url))
             self.channel = self.connection.channel()
-            self.channel.exchange_declare(exchange=self.exchange, type='topic')
+            self.channel.exchange_declare(exchange=self.exchange, type='fanout')
         except:
             time.sleep(2)
             self.connect()
